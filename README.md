@@ -7,7 +7,7 @@ Laravel 5 package for logging errors to your e-mail(s), telegram, slack and data
 
 You can install the package through Composer.
 ```bash
-composer require yaro/log-envelope
+composer require vis/log-envelope
 ```
 You must install this service provider. Make this the very first provider in list.
 ```php
