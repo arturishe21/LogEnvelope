@@ -1,5 +1,5 @@
 {
-    "name": "yaro/log-envelope",
+    "name": "vis/log-envelope",
     "description": "Laravel 5 email on error",
     "keywords": ["laravel", "log", "error", "mail on error"],
     "require": {
@@ -19,12 +19,7 @@
             "homepage": "http://cherry-pie.co",
             "role": "Owner"
         },
-        {
-            "name": "Dennis Smink",
-            "email": "dennissmink@gmail.com",
-            "homepage": "http://www.dennissmink.nl",
-            "role": "Developer"
-        }
+        
     ],
     "minimum-stability": "stable"
 }
