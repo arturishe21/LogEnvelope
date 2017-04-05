@@ -2,6 +2,8 @@
 
 namespace Yaro\LogEnvelope\Drivers;
 
+use Exception;
+
 class Slack extends AbstractDriver
 {
         
