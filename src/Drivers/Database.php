@@ -2,8 +2,6 @@
 
 namespace Yaro\LogEnvelope\Drivers;
 
-use Yaro\LogEnvelope\Models\ExceptionModel;
-
 class Database extends AbstractDriver
 {
             

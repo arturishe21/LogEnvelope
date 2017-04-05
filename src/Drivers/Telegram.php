@@ -43,7 +43,12 @@ class Telegram extends AbstractDriver
             $url = 'https://api.telegram.org/'. $this->config['token'] .'/sendMessage?disable_web_page_preview=true&chat_id='. $idUser
                  . '&parse_mode=HTML&text=';
                  
-            @file_get_contents($url . $text);
+              try {
+                  file_get_contents($url . $text);
+              } catch (Exception $e) {
+                  echo $e->getMessage();
+              }
+            
         }
     } // end send
     

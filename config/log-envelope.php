@@ -27,7 +27,7 @@ return [
             'enabled'  => false,
             'username' => 'Log Envelope',
             'channel'  => '#logenvelope', // create channel
-            'token'    => env('LOGENVELOPE_SLACK_TOKEN'),
+            'token'    => env('LOGENVELOPE_SLACK_TOKEN'),  //this need generate token https://api.slack.com/docs/oauth-test-tokens
         ],
         
         'database' => [
@@ -40,7 +40,7 @@ return [
      * Change config for LogEnvelope execution.
      */
     'force_config' => [
-        'mail.driver' => 'sendmail',
+        'mail.driver' => 'mail',
         'queue.default' => 'sync',
     ],
 

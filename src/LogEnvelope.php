@@ -5,7 +5,6 @@ namespace Yaro\LogEnvelope;
 use Exception;
 use SplFileObject;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Yaro\LogEnvelope\Drivers\DriverFactory;
@@ -68,7 +67,7 @@ class LogEnvelope
         return in_array($exceptionClass, $this->config['except']);
     } // end isSkipException
 
-    private function getExceptionData($exception)
+    private function getExceptionData(Exception $exception)
     {
         $data = [];
 
@@ -103,7 +102,10 @@ class LogEnvelope
         $data['file_lines'] = [];
         
         $file = new SplFileObject($data['file']);
-        for ($i = -1 * abs($count); $i <= abs($count); $i++) {
+        $startFor = -1 * abs($count);
+        $endFor = abs($count);
+        
+        for ($i = $startFor; $i <= $endFor; $i++) {
             list($line, $exegutorLine) = $this->getLineInfo($file, $data['line'], $i);
             $data['exegutor'][]   = $exegutorLine;
             $data['file_lines'][$data['line'] + $i] = $line;
@@ -120,7 +122,7 @@ class LogEnvelope
         return $data;
     } // end getExceptionData
 
-    private function getLineInfo($file, $line, $i)
+    private function getLineInfo(SplFileObject $file, $line, $i)
     {
         $currentLine = $line + $i;
         // cuz array starts with 0, when file lines start count from 1

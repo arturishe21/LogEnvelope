@@ -54,7 +54,12 @@ class Slack extends AbstractDriver
              . '&username='. urlencode($this->config['username']) 
              . '&as_user=false&icon_url=http%3A%2F%2Fcherry-pie.co%2Fimg%2Flog-envelope.png&mrkdwn=1&pretty=1&attachments='. urlencode(json_encode([$attachments]));
         
-        @file_get_contents($url);
+        try {
+            file_get_contents($url);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+  
     } // end send
     
 }
