@@ -1,17 +1,16 @@
-<?php 
+<?php
 
 namespace Yaro\LogEnvelope;
 
 use Exception;
-use SplFileObject;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use SplFileObject;
 use Yaro\LogEnvelope\Drivers\DriverFactory;
 
 class LogEnvelope
 {
-    
     private $config = [];
     private $cachedConfig = [];
 
@@ -20,12 +19,14 @@ class LogEnvelope
         $this->config['except'] = config('yaro.log-envelope.except', []);
         $this->config['count'] = config('yaro.log-envelope.lines_count', 6);
         $this->config['drivers'] = config('yaro.log-envelope.drivers', []);
-    } // end __construct
+    }
+
+    // end __construct
 
     public function send($exception)
     {
         $this->onBefore();
-        
+
         try {
             $data = $this->getExceptionData($exception);
 
@@ -39,10 +40,12 @@ class LogEnvelope
         } catch (Exception $e) {
             Log::error($e);
         }
-        
+
         $this->onAfter();
-    } // end send
-    
+    }
+
+    // end send
+
     private function onBefore()
     {
         $this->cachedConfig = [];
@@ -53,19 +56,25 @@ class LogEnvelope
         if ($forcedConfig) {
             config($forcedConfig);
         }
-    } // end onBefore
-    
+    }
+
+    // end onBefore
+
     private function onAfter()
     {
         if ($this->cachedConfig) {
             config($this->cachedConfig);
         }
-    } // end onAfter
-    
+    }
+
+    // end onAfter
+
     public function isSkipException($exceptionClass)
     {
         return in_array($exceptionClass, $this->config['except']);
-    } // end isSkipException
+    }
+
+    // end isSkipException
 
     private function getExceptionData(Exception $exception)
     {
@@ -83,7 +92,7 @@ class LogEnvelope
         $data['line'] = $exception->getLine();
         $data['file'] = $exception->getFile();
         $data['class'] = get_class($exception);
-        $data['storage'] = array(
+        $data['storage'] = [
             'SERVER'  => Request::server(),
             'GET'     => Request::query(),
             'POST'    => $_POST,
@@ -92,22 +101,22 @@ class LogEnvelope
             'COOKIE'  => Request::cookie(),
             'SESSION' => Request::hasSession() ? Session::all() : [],
             'HEADERS' => Request::header(),
-        );
+        ];
 
         $data['storage'] = array_filter($data['storage']);
 
         $count = $this->config['count'];
-        
-        $data['exegutor']   = [];
+
+        $data['exegutor'] = [];
         $data['file_lines'] = [];
-        
+
         $file = new SplFileObject($data['file']);
         $startFor = -1 * abs($count);
         $endFor = abs($count);
-        
+
         for ($i = $startFor; $i <= $endFor; $i++) {
             list($line, $exegutorLine) = $this->getLineInfo($file, $data['line'], $i);
-            $data['exegutor'][]   = $exegutorLine;
+            $data['exegutor'][] = $exegutorLine;
             $data['file_lines'][$data['line'] + $i] = $line;
         }
 
@@ -120,7 +129,9 @@ class LogEnvelope
         }
 
         return $data;
-    } // end getExceptionData
+    }
+
+    // end getExceptionData
 
     private function getLineInfo(SplFileObject $file, $line, $i)
     {
@@ -132,12 +143,12 @@ class LogEnvelope
         return [
             $file->__toString(),
             [
-                'line' => '<span style="color:#aaaaaa;">' . $currentLine . '.</span> ' . SyntaxHighlight::process($file->__toString()),
-                'wrap_left' => $i ? '' : '<span style="color: #F5F5F5; background-color: #5A3E3E; width: 100%; display: block;">',
+                'line'       => '<span style="color:#aaaaaa;">'.$currentLine.'.</span> '.SyntaxHighlight::process($file->__toString()),
+                'wrap_left'  => $i ? '' : '<span style="color: #F5F5F5; background-color: #5A3E3E; width: 100%; display: block;">',
                 'wrap_right' => $i ? '' : '</span>',
-            ]
+            ],
         ];
-    } // end getLineInfo
+    }
 
+    // end getLineInfo
 }
-

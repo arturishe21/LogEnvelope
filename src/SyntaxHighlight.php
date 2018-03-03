@@ -1,17 +1,20 @@
-<?php namespace Yaro\LogEnvelope;
+<?php
+
+namespace Yaro\LogEnvelope;
 
 class SyntaxHighlight
 {
-
-    private $tokens = array();
+    private $tokens = [];
 
     public static function process($s)
     {
         $class = get_called_class();
-        $obj = new $class;
+        $obj = new $class();
 
         return $obj->highlight($s);
-    } // end process
+    }
+
+    // end process
 
     public function highlight($s)
     {
@@ -20,21 +23,19 @@ class SyntaxHighlight
         // Workaround for escaped backslashes
         $s = str_replace('\\\\', '\\\\<e>', $s);
 
-        $regexp = array(
+        $regexp = [
             // Numbers (also look for Hex)
             '/(?<!\w)(
                 (0x|\#)[\da-f]+|
                 \d+|
                 \d+(px|em|cm|mm|rem|s|\%)
-            )(?!\w)/ix'
-            => '<span style="color:#8CD0D3;">$1</span>',
+            )(?!\w)/ix' => '<span style="color:#8CD0D3;">$1</span>',
 
             // Make the bold assumption that an
             // all uppercase word has a special meaning
             '/(?<!\w|>|\#)(
                 [A-Z_0-9]{2,}
-            )(?!\w)/x'
-            => '<span style="color:#FFFFFF">$1</span>',
+            )(?!\w)/x' => '<span style="color:#FFFFFF">$1</span>',
 
             // Keywords
             '/(?<!\w|\$|\%|\@|>)(
@@ -44,15 +45,13 @@ class SyntaxHighlight
                 real|string|array|global|const|static|public|private|protected|
                 published|extends|switch|true|false|null|void|this|self|struct|
                 char|signed|unsigned|short|long
-            )(?!\w|=")/ix'
-            => '<span style="color:#DFC47D">$1</span>',
+            )(?!\w|=")/ix' => '<span style="color:#DFC47D">$1</span>',
 
             // PHP/Perl-Style Vars: $var, %var, @var
             '/(?<!\w)(
                 (\$|\%|\@)(\-&gt;|\w)+
-            )(?!\w)/ix'
-            => '<span style="color:#CEDF99">$1</span>',
-        );
+            )(?!\w)/ix' => '<span style="color:#CEDF99">$1</span>',
+        ];
 
         // Comments/Strings
         $s = preg_replace_callback('/(
@@ -71,10 +70,12 @@ class SyntaxHighlight
 
         // Delete the "Escaped Backslash Workaround Token" (TM)
         // and replace tabs with four spaces.
-        $s = str_replace(array('<e>', "\t"), array('', '    '), $s);
+        $s = str_replace(['<e>', "\t"], ['', '    '], $s);
 
         return $s;
-    } // end highlight
+    }
+
+    // end highlight
 
     /*
      * Regexp-Callback to replace every comment or string with a uniqid and save
@@ -85,15 +86,17 @@ class SyntaxHighlight
     private function replaceId($matches)
     {
         $match = $matches[0];
-        $id = "##r" . uniqid() . "##";
+        $id = '##r'.uniqid().'##';
 
         // String or Comment?
         if (substr($match, 0, 2) == '//' || substr($match, 0, 2) == '/*' || substr($match, 0, 2) == '##' || substr($match, 0, 7) == '&lt;!--') {
-            $this->tokens[$id] = '<span style="color:#7F9F7F">' . $match . '</span>';
+            $this->tokens[$id] = '<span style="color:#7F9F7F">'.$match.'</span>';
         } else {
-            $this->tokens[$id] = '<span style="color:#CC9385">' . $match . '</span>';
+            $this->tokens[$id] = '<span style="color:#CC9385">'.$match.'</span>';
         }
-        return $id;
-    } // end replaceId
-}
 
+        return $id;
+    }
+
+    // end replaceId
+}
