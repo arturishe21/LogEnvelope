@@ -1,24 +1,22 @@
-<?php 
+<?php
 
 namespace Yaro\LogEnvelope\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 class ExceptionModel extends Model
 {
-    
     protected $fillable = [
-        'host', 
-        'method', 
-        'fullUrl', 
-        'exception', 
-        'error', 
-        'line', 
-        'file', 
-        'class', 
-        'storage', 
-        'exegutor', 
+        'host',
+        'method',
+        'fullUrl',
+        'exception',
+        'error',
+        'line',
+        'file',
+        'class',
+        'storage',
+        'exegutor',
         'file_lines',
     ];
 
@@ -28,5 +26,4 @@ class ExceptionModel extends Model
      * @var string
      */
     protected $table = 'exceptions';
-    
 }
